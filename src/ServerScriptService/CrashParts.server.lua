@@ -43,16 +43,17 @@ end
 
 local function onTouchedCrash(hitPart:BasePart, beHittedPart:BasePart)
 
-	-- don't hit self
-	local model = beHittedPart:FindFirstAncestorOfClass("Model")
-	if script.Parent.Parent == model then
+	-- don't hit self  
+	local bHittedModel = beHittedPart:FindFirstAncestorOfClass("Model")
+	local model = hitPart:FindFirstAncestorOfClass("Model")
+	if bHittedModel == model then
 		return
 	end
 
 	if beHittedPart:HasTag(CrashTag) then
 		return
 	end
-	local hittedPlayer = getHittedPlayer(beHittedPart, model)
+	local hittedPlayer = getHittedPlayer(beHittedPart, bHittedModel)
 
 	print(`hit {beHittedPart:GetFullName()}`)
 	beHittedPart:BreakJoints()
@@ -61,13 +62,13 @@ local function onTouchedCrash(hitPart:BasePart, beHittedPart:BasePart)
 		local killer:Player = getDriver(hitPart)
 
 		if not killer then
-			print(`Boom {model.Name} crash self`) 
+			print(`Boom {bHittedModel.Name} crash self`) 
 			--Rank.AddKills(hittedPlayer, 1)
 			return
 		end
 		
 		if killer then
-			print(`Boom {killer.Name} creashed {model.Name}`)
+			print(`Boom {killer.Name} creashed {bHittedModel.Name}`)
 			Rank.AddKills(killer, 1)
 		end
 	end
