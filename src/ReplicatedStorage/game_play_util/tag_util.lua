@@ -33,6 +33,9 @@ function module.ConnectTag(tag:string, onInsanceAdd)
 	
 	-- Also detect any objects that already have the tag
 	for _, object in pairs(CollectionService:GetTagged(tag)) do
+		if not object:FindFirstAncestorWhichIsA("Workspace") then
+			continue
+		end
 		onInstanceAdded(object)
 	end
 	

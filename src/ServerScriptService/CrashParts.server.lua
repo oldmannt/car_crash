@@ -43,17 +43,30 @@ end
 
 local function onTouchedCrash(hitPart:BasePart, beHittedPart:BasePart)
 
-	-- don't hit self  
-	local bHittedModel = beHittedPart:FindFirstAncestorOfClass("Model")
-	local model = hitPart:FindFirstAncestorOfClass("Model")
-	if bHittedModel == model then
-		return
-	end
-
 	if beHittedPart:HasTag(CrashTag) then
 		return
 	end
-	local hittedPlayer = getHittedPlayer(beHittedPart, bHittedModel)
+	
+	local beHittedModel = beHittedPart:FindFirstAncestorOfClass("Model")
+	if not beHittedModel then
+		return
+	end
+	local model = hitPart:FindFirstAncestorOfClass("Model")
+	if not model then
+		return
+	end
+	-- don't hit self  
+	if beHittedModel == model then
+		return
+	end
+
+	if model:IsAncestorOf(beHittedModel) or 
+		beHittedModel:IsAncestorOf(model) then
+		return
+	end
+
+	--print(`hitPart {model:GetFullName()}, hit {beHittedModel:GetFullName()}`)
+	local hittedPlayer = getHittedPlayer(beHittedPart, beHittedModel)
 
 	print(`hit {beHittedPart:GetFullName()}`)
 	beHittedPart:BreakJoints()
@@ -62,13 +75,13 @@ local function onTouchedCrash(hitPart:BasePart, beHittedPart:BasePart)
 		local killer:Player = getDriver(hitPart)
 
 		if not killer then
-			print(`Boom {bHittedModel.Name} crash self`) 
+			print(`Boom {beHittedModel.Name} crash self`) 
 			--Rank.AddKills(hittedPlayer, 1)
 			return
 		end
 		
 		if killer then
-			print(`Boom {killer.Name} creashed {bHittedModel.Name}`)
+			print(`Boom {killer.Name} creashed {beHittedModel.Name}`)
 			Rank.AddKills(killer, 1)
 		end
 	end
@@ -76,6 +89,10 @@ end
 
 TagUtil.ConnectTag(CrashTag, function(obj:Instance)
 	if not obj:IsA("BasePart") then
+		return
+	end
+
+	if not obj:FindFirstAncestorOfClass("Model") then
 		return
 	end
 
