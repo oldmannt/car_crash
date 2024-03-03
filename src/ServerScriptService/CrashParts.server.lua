@@ -35,7 +35,7 @@ local function getDriver(part:BasePart)
 	end
 
 	for i, seat in ipairs(instancesOfDesiredClass) do
-		if seat.Occupant and Players:GetPlayerFromCharacter(seat.Occupant) then
+		if seat.Occupant and Players:GetPlayerFromCharacter(seat.Occupant.Parent) then
 			return seat.Occupant
 		end
 	end
@@ -68,7 +68,7 @@ local function onTouchedCrash(hitPart:BasePart, beHittedPart:BasePart)
 	--print(`hitPart {model:GetFullName()}, hit {beHittedModel:GetFullName()}`)
 	local hittedPlayer = getHittedPlayer(beHittedPart, beHittedModel)
 
-	print(`hit {beHittedPart:GetFullName()}`)
+	print(`{hitPart:GetFullName()} hit {beHittedPart:GetFullName()} {hittedPlayer}` )
 	beHittedPart:BreakJoints()
 	-- check if the above BreakJoints kill a player
 	if hittedPlayer then
@@ -76,13 +76,13 @@ local function onTouchedCrash(hitPart:BasePart, beHittedPart:BasePart)
 
 		if not killer then
 			print(`Boom {beHittedModel.Name} crash self`) 
-			--Rank.AddKills(hittedPlayer, 1)
+			--Rank.AddKills(hittedPlayer.Name, 1)
 			return
 		end
 		
 		if killer then
 			print(`Boom {killer.Name} creashed {beHittedModel.Name}`)
-			Rank.AddKills(killer, 1)
+			Rank.AddKills(killer.Name, 1)
 		end
 	end
 end
