@@ -32,9 +32,8 @@ function module.placeNewCar(player:Player)
 
     local size = car:GetExtentsSize()
     
--- place the car next to the spawnLocation
-    car:PivotTo()
-    car.Position = spawnLocation.Position + Vector3.new(size.X, 0, 0)
+    -- place the car next to the spawnLocation
+    car:PivotTo(spawnLocation.CFrame * CFrame.new(size.X * 1.1, size.Y/2, 0) )
     car.Parent = game.Workspace
 end
 
