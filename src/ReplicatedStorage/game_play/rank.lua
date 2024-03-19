@@ -1,4 +1,3 @@
-local module = {}
 
 local players_rank = {}
 
